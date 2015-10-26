@@ -15,6 +15,14 @@ public:
     explicit editCommand(QWidget *parent = 0);
     ~editCommand();
 
+public slots:
+    void receiveCommandSettings(QString sNameCmd,QString sFileNameExec,QString sParams);
+
+private slots:
+    void on_buBoxOkCancel_accepted();
+
+    void on_buBoxOkCancel_rejected();
+
 private:
     Ui::editCommand *ui;
 };

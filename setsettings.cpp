@@ -7,6 +7,10 @@ SetSettings::SetSettings(QWidget *parent) :
     ui(new Ui::SetSettings)
 {
     ui->setupUi(this);
+    editCommandWindow = new editCommand;
+    connect(this, SIGNAL(sendCommandSettings(QString,QString,QString)),
+            editCommandWindow, SLOT(receiveCommandSettings(QString,QString,QString)));
+
 #ifdef Q_OS_WIN32
    ui->cbAutostart->setEnabled(true);
 #else
@@ -16,6 +20,7 @@ SetSettings::SetSettings(QWidget *parent) :
 
 SetSettings::~SetSettings()
 {
+    delete this->editCommandWindow;
     delete ui;
 }
 
@@ -27,11 +32,6 @@ void SetSettings::on_pbAddFile_clicked()
 void SetSettings::on_pbDeleteFile_clicked()
 {
     delete ui->lvFileList->currentItem();
-}
-
-void SetSettings::on_pbAddCommand_clicked()
-{
-
 }
 
 void SetSettings::on_pbSetDefaults_clicked()
@@ -55,6 +55,9 @@ void SetSettings::writeSettings()
     }
 
     settingsApp->endArray();
+    settingsApp->beginGroup("MainWindow");
+    //settingsApp->value("saveposition",ui->cbSaveMainWindowPosition->checkState(),true)
+    settingsApp->endGroup();
 }
 
 void SetSettings::readSettings()
@@ -72,4 +75,16 @@ void SetSettings::recieveAppSettings(QSettings *sp)
 {
     this->settingsApp = sp;
     readSettings();
+}
+
+void SetSettings::on_pbEditCommand_clicked()
+{
+    emit sendCommandSettings("test","test","test");
+    editCommandWindow->exec();
+}
+
+void SetSettings::on_pbAddCommand_clicked()
+{
+    emit sendCommandSettings("new","new","new");
+    editCommandWindow->exec();
 }

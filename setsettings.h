@@ -27,6 +27,8 @@ private slots:
 
     void on_pbAddCommand_clicked();
 
+    void on_pbEditCommand_clicked();
+
 public slots:
     void recieveAppSettings(QSettings *sp);
 
@@ -34,6 +36,9 @@ private:
     Ui::SetSettings *ui;
     QSettings *settingsApp;
     editCommand *editCommandWindow;
+
+signals:
+    void sendCommandSettings(QString sNameCmd,QString sFileNameExec,QString sParams);
 };
 
 #endif // SETSETTINGS_H
