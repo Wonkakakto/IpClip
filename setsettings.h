@@ -31,6 +31,7 @@ private slots:
 
 public slots:
     void recieveAppSettings(QSettings *sp);
+    void receiveCommandParam(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand);
 
 private:
     Ui::SetSettings *ui;
@@ -38,7 +39,7 @@ private:
     editCommand *editCommandWindow;
 
 signals:
-    void sendCommandSettings(QString sNameCmd,QString sFileNameExec,QString sParams);
+    void sendCommandSettings(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand);
 };
 
 #endif // SETSETTINGS_H

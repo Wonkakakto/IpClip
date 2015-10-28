@@ -16,7 +16,7 @@ public:
     ~editCommand();
 
 public slots:
-    void receiveCommandSettings(QString sNameCmd,QString sFileNameExec,QString sParams);
+    void receiveCommandSettings(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCmd);
 
 private slots:
     void on_buBoxOkCancel_accepted();
@@ -25,6 +25,10 @@ private slots:
 
 private:
     Ui::editCommand *ui;
+    bool bNewCommand;
+
+signals:
+    void sendCommandParam(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand);
 };
 
 #endif // EDITCOMMAND_H

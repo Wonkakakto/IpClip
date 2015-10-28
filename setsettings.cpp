@@ -8,14 +8,21 @@ SetSettings::SetSettings(QWidget *parent) :
 {
     ui->setupUi(this);
     editCommandWindow = new editCommand;
-    connect(this, SIGNAL(sendCommandSettings(QString,QString,QString)),
-            editCommandWindow, SLOT(receiveCommandSettings(QString,QString,QString)));
+    connect(this, SIGNAL(sendCommandSettings(QString,QString,QString,bool)),
+            editCommandWindow, SLOT(receiveCommandSettings(QString,QString,QString,bool)));
 
 #ifdef Q_OS_WIN32
    ui->cbAutostart->setEnabled(true);
 #else
-      ui->cbAutostart->setEnabled(false);
+   ui->cbAutostart->setEnabled(false);
 #endif
+
+//WHILE DEVELOPE
+   ui->cbSaveHistory->setEnabled(false);
+   ui->cbSaveHistoryDepth->setEnabled(false);
+   ui->pbSetDefaults->setEnabled(false);
+   ui->pbImportSettings->setEnabled(false);
+//
 }
 
 SetSettings::~SetSettings()
@@ -55,8 +62,9 @@ void SetSettings::writeSettings()
     }
 
     settingsApp->endArray();
+
     settingsApp->beginGroup("MainWindow");
-    //settingsApp->value("saveposition",ui->cbSaveMainWindowPosition->checkState(),true)
+    settingsApp->setValue("saveposition",ui->cbSaveMainWindowPosition->checkState());
     settingsApp->endGroup();
 }
 
@@ -69,6 +77,10 @@ void SetSettings::readSettings()
         ui->lvFileList->addItem(settingsApp->value("File").toString());
     }
     settingsApp->endArray();
+
+    settingsApp->beginGroup("MainWindow");
+    ui->cbSaveMainWindowPosition->setChecked(settingsApp->value("saveposition",true).toBool());
+    settingsApp->endGroup();
 }
 
 void SetSettings::recieveAppSettings(QSettings *sp)
@@ -79,12 +91,17 @@ void SetSettings::recieveAppSettings(QSettings *sp)
 
 void SetSettings::on_pbEditCommand_clicked()
 {
-    emit sendCommandSettings("test","test","test");
+    emit sendCommandSettings("test","test","test",false);
     editCommandWindow->exec();
 }
 
 void SetSettings::on_pbAddCommand_clicked()
 {
-    emit sendCommandSettings("new","new","new");
+    emit sendCommandSettings("new","new","new",true);
     editCommandWindow->exec();
+}
+
+void SetSettings::receiveCommandParam(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand)
+{
+
 }

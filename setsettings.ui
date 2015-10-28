@@ -230,7 +230,7 @@
           <string>Запоминать историю</string>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox">
+        <widget class="QSpinBox" name="cbSaveHistoryDepth">
          <property name="geometry">
           <rect>
            <x>320</x>
