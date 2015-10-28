@@ -7,6 +7,10 @@ editCommand::editCommand(QWidget *parent) :
 {
     ui->setupUi(this);
     bNewCommand = true;
+//    connect(this, SIGNAL(sendCommandSettings(QString,QString,QString,bool)),
+//    editCommandWindow, SLOT(receiveCommandSettings(QString,QString,QString,bool)));
+    connect(this, SIGNAL(sendCommandParam(QString,QString,QString,bool)),
+            parent,SLOT(receiveCommandParam(QString,QString,QString,bool)));
 }
 
 editCommand::~editCommand()
@@ -16,6 +20,8 @@ editCommand::~editCommand()
 
 void editCommand::on_buBoxOkCancel_accepted()
 {
+    //samle: emit sendCommandSettings("test","test","test",false);
+    emit sendCommandParam(ui->leNameCmd->text(),ui->leFileNameExec->text(),ui->lePrams->text(),this->bNewCommand);
     this->accept();
 }
 

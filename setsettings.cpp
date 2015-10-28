@@ -1,13 +1,14 @@
 #include "setsettings.h"
 #include "ui_setsettings.h"
 #include <QFileDialog>
+#include <QMessageBox>
 
 SetSettings::SetSettings(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SetSettings)
 {
     ui->setupUi(this);
-    editCommandWindow = new editCommand;
+    editCommandWindow = new editCommand(this);
     connect(this, SIGNAL(sendCommandSettings(QString,QString,QString,bool)),
             editCommandWindow, SLOT(receiveCommandSettings(QString,QString,QString,bool)));
 
@@ -97,11 +98,12 @@ void SetSettings::on_pbEditCommand_clicked()
 
 void SetSettings::on_pbAddCommand_clicked()
 {
-    emit sendCommandSettings("new","new","new",true);
+    emit sendCommandSettings("","","",true);
     editCommandWindow->exec();
 }
 
 void SetSettings::receiveCommandParam(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand)
 {
-
+    // добавялем новую команду в таблицу: tvCommandsList
+    QMessageBox::information(this, "TrayIcon", QString::number(bNewCommand));
 }
