@@ -24,12 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QString pathForStoreSettings = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)) + QDir::separator();
 
-    /*#ifdef Q_OS_WIN32
-        pathForStoreSettings = qgetenv("AppData") + QDir::separator();
-    #else
-        pathForStoreSettings = pathForStoreSettings + ".config" + QDir::separator();
-    #endif*/
-
     QDir dir = QDir::root();
     dir.mkpath( pathForStoreSettings );
 
@@ -39,16 +33,22 @@ MainWindow::MainWindow(QWidget *parent) :
     readSettings();
 
     ipList = new QStringList;
-    readIpList();
+    this -> readIpList();
 
-    /*QString str;
-    str.setNum(ipList->count());
-    QMessageBox::information(this, "TrayIcon", "summ= " + str);*/
+    this -> readCommandsList();
+
+    this -> setMainMenuActions();
+
+    ui->bpDoIt->setMenu(trayIconMenu);
 }
 
 MainWindow::~MainWindow()
 {
     delete ipList;
+    //delete DefaultCommand;
+    //delete Commands[0];
+    //delete Commands[1];
+    //delete Commands[2];
     delete this->settingsApp;
     delete ui;
 }
@@ -174,18 +174,18 @@ void MainWindow::showWindowSetSettings()
 void MainWindow::writeSettings()
 {
     settingsApp->beginGroup("MainWindow");
-    settingsApp->setValue("size", size());
-    settingsApp->setValue("pos", pos());
+    settingsApp->setValue("Size", size());
+    settingsApp->setValue("Pos", pos());
     settingsApp->endGroup();
 }
 
 void MainWindow::readSettings()
 {
     settingsApp->beginGroup("MainWindow");
-    if(settingsApp->value("saveposition",true).toBool())
+    if(settingsApp->value("SavePosition",true).toBool())
     {
-        resize(settingsApp->value("size",QSize(this->width(),this->height())).toSize());
-        move(settingsApp->value("pos",QPoint(200,200)).toPoint());
+        resize(settingsApp->value("Size",QSize(this->width(),this->height())).toSize());
+        move(settingsApp->value("Pos",QPoint(200,200)).toPoint());
     }
     settingsApp->endGroup();
 }
@@ -224,4 +224,52 @@ void MainWindow::on_cbFind_currentTextChanged(const QString &arg1)
             i = ipList->indexOf(QRegExp(".*" + QRegExp::escape(arg1) + ".*"),i);
         }
     }
+}
+
+void MainWindow::readCommandsList()
+{
+    settingsApp->beginGroup("MainWindow");
+    DefaultCommand[0] = settingsApp->value("DefaultCommand","Ping").toString();
+    settingsApp->endGroup();
+    DefaultCommand[1] = "ping";
+    DefaultCommand[2] = "%s";
+
+
+    int size = settingsApp->beginReadArray("Commands");
+    Commands[0] = new QStringList[size];
+    Commands[1] = new QStringList[size];
+    Commands[2] = new QStringList[size];
+    for(int j=0;j<size;++j)
+    {
+        settingsApp->setArrayIndex(j);
+        Commands[0]->append(settingsApp->value("CommandName").toString());
+        Commands[1]->append(settingsApp->value("CommandPath").toString());
+        Commands[2]->append(settingsApp->value("CommandParams").toString());
+        if(DefaultCommand[0]==settingsApp->value("CommandName").toString())
+        {
+            DefaultCommand[1] = settingsApp->value("CommandPath").toString();
+            DefaultCommand[2] = settingsApp->value("CommandParams").toString();
+        }
+    }
+    settingsApp->endArray();
+}
+
+void MainWindow::setMainMenuActions()
+{
+    ui->bpDoIt->setText( DefaultCommand[0] );
+
+    commandMainMenu = new QMenu(this);
+}
+
+void MainWindow::on_bpDoIt_customContextMenuRequested(const QPoint &pos)
+{
+    //trayIconMenu->exec();
+    //commandMainMenu->exec();
+    //trayIconMenu->exec();
+
+}
+
+void MainWindow::on_bpDoIt_clicked()
+{
+    QMessageBox::information(this, "TrayIcon", "Сохраняем и применяем новые настройки приложения!");
 }

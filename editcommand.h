@@ -20,12 +20,16 @@ public slots:
 
 private slots:
     void on_buBoxOkCancel_accepted();
-
     void on_buBoxOkCancel_rejected();
+
+    void on_tbFileNameExec_clicked();
 
 private:
     Ui::editCommand *ui;
     bool bNewCommand;
+
+protected slots:
+    void showEvent(QShowEvent * event);
 
 signals:
     void sendCommandParam(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand);

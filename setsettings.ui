@@ -115,7 +115,23 @@
            <item row="0" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
-              <widget class="QTableView" name="tvCommandsList"/>
+              <widget class="QTableWidget" name="tvCommandsList">
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <attribute name="horizontalHeaderCascadingSectionResizes">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>40</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+              </widget>
              </item>
             </layout>
            </item>
@@ -139,6 +155,13 @@
               <widget class="QPushButton" name="pbDeleteCommand">
                <property name="text">
                 <string>Удалить</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="bpDefaultCommand">
+               <property name="text">
+                <string>По умолчанию</string>
                </property>
               </widget>
              </item>

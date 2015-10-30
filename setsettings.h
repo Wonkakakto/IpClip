@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QSettings>
+#include <QTableWidgetItem>
 #include "editcommand.h"
 
 namespace Ui {
@@ -28,6 +29,11 @@ private slots:
     void on_pbAddCommand_clicked();
 
     void on_pbEditCommand_clicked();
+
+
+    void on_pbDeleteCommand_clicked();
+
+    void on_bpDefaultCommand_clicked();
 
 public slots:
     void recieveAppSettings(QSettings *sp);

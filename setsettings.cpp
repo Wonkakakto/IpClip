@@ -12,6 +12,12 @@ SetSettings::SetSettings(QWidget *parent) :
     connect(this, SIGNAL(sendCommandSettings(QString,QString,QString,bool)),
             editCommandWindow, SLOT(receiveCommandSettings(QString,QString,QString,bool)));
 
+    ui->tvCommandsList->setColumnCount(4);
+    ui->tvCommandsList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tvCommandsList->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tvCommandsList->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+    ui->tvCommandsList->setSelectionBehavior(QAbstractItemView::SelectRows);
+
 #ifdef Q_OS_WIN32
    ui->cbAutostart->setEnabled(true);
 #else
@@ -65,12 +71,34 @@ void SetSettings::writeSettings()
     settingsApp->endArray();
 
     settingsApp->beginGroup("MainWindow");
-    settingsApp->setValue("saveposition",ui->cbSaveMainWindowPosition->checkState());
+    settingsApp->setValue("SavePosition",ui->cbSaveMainWindowPosition->checkState());
+    settingsApp->endGroup();
+
+    QString defaultCommand = "Ping";
+    settingsApp->remove("Commands");
+    settingsApp->beginWriteArray("Commands");
+    for(int j=0;j<ui->tvCommandsList->rowCount();++j)
+    {
+        settingsApp->setArrayIndex(j);
+        settingsApp->setValue("CommandName",ui->tvCommandsList->item(j,1)->text());
+        settingsApp->setValue("CommandPath",ui->tvCommandsList->item(j,2)->text());
+        settingsApp->setValue("CommandParams",ui->tvCommandsList->item(j,3)->text());
+        if(ui->tvCommandsList->item(j,0)!=0 )
+            defaultCommand = ui->tvCommandsList->item(j,1)->text();
+    }
+    settingsApp->endArray();
+    settingsApp->beginGroup("MainWindow");
+    settingsApp->setValue("DefaultCommand", defaultCommand);
     settingsApp->endGroup();
 }
 
 void SetSettings::readSettings()
 {
+    QString defaultCommand = "Ping";
+    settingsApp->beginGroup("MainWindow");
+    defaultCommand = settingsApp->value("DefaultCommand","Ping").toString();
+    settingsApp->endGroup();
+
     int size = settingsApp->beginReadArray("Files");
     for(int i=0; i<size; ++i)
     {
@@ -80,8 +108,22 @@ void SetSettings::readSettings()
     settingsApp->endArray();
 
     settingsApp->beginGroup("MainWindow");
-    ui->cbSaveMainWindowPosition->setChecked(settingsApp->value("saveposition",true).toBool());
+    ui->cbSaveMainWindowPosition->setChecked(settingsApp->value("SavePosition",true).toBool());
     settingsApp->endGroup();
+
+
+    size = settingsApp->beginReadArray("Commands");
+    ui->tvCommandsList->setRowCount(size);
+    for(int j=0;j<size;++j)
+    {
+        settingsApp->setArrayIndex(j);
+        ui->tvCommandsList->setItem(j,1,new QTableWidgetItem(settingsApp->value("CommandName").toString()));
+        ui->tvCommandsList->setItem(j,2,new QTableWidgetItem(settingsApp->value("CommandPath").toString()));
+        ui->tvCommandsList->setItem(j,3,new QTableWidgetItem(settingsApp->value("CommandParams").toString()));
+        if(defaultCommand == settingsApp->value("CommandName").toString())
+            ui->tvCommandsList->setItem(j,0,new QTableWidgetItem(QPixmap(":/images/images/icon.png"),""));
+    }
+    settingsApp->endArray();
 }
 
 void SetSettings::recieveAppSettings(QSettings *sp)
@@ -92,8 +134,14 @@ void SetSettings::recieveAppSettings(QSettings *sp)
 
 void SetSettings::on_pbEditCommand_clicked()
 {
-    emit sendCommandSettings("test","test","test",false);
-    editCommandWindow->exec();
+    int row = ui->tvCommandsList->currentRow();
+    if( row != -1 )
+    {
+        emit sendCommandSettings(ui->tvCommandsList->item(row,1)->text(),
+                                 ui->tvCommandsList->item(row,2)->text(),
+                                 ui->tvCommandsList->item(row,3)->text(),false);
+        editCommandWindow->exec();
+    }
 }
 
 void SetSettings::on_pbAddCommand_clicked()
@@ -104,6 +152,47 @@ void SetSettings::on_pbAddCommand_clicked()
 
 void SetSettings::receiveCommandParam(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand)
 {
-    // добавялем новую команду в таблицу: tvCommandsList
-    QMessageBox::information(this, "TrayIcon", QString::number(bNewCommand));
+    int row = 0;
+
+    if( bNewCommand )
+    {
+        row = ui->tvCommandsList->rowCount();
+        ui->tvCommandsList->setRowCount(row + 1);
+        ui->tvCommandsList->setItem(row,1,new QTableWidgetItem(sNameCmd));
+        ui->tvCommandsList->setItem(row,2,new QTableWidgetItem(sFileNameExec));
+        ui->tvCommandsList->setItem(row,3,new QTableWidgetItem(sParams));
+
+    }else
+    {
+        row = ui->tvCommandsList->currentRow();
+        ui->tvCommandsList->item(row,1)->setText(sNameCmd);
+        ui->tvCommandsList->item(row,2)->setText(sFileNameExec);
+        ui->tvCommandsList->item(row,3)->setText(sParams);
+    }
+}
+
+void SetSettings::on_pbDeleteCommand_clicked()
+{
+    int row = ui->tvCommandsList->currentRow();
+    if( row != -1 )
+    {
+        ui->tvCommandsList->removeRow(row);
+    }
+}
+
+void SetSettings::on_bpDefaultCommand_clicked()
+{
+    int row = ui->tvCommandsList->currentRow();
+    if( row != -1 )
+    {
+        QTableWidgetItem* item;
+        item = ui->tvCommandsList->item(row,0);
+        if(item == 0)
+            ui->tvCommandsList->setItem(row,0,new QTableWidgetItem(QPixmap(":/images/images/icon.png"),""));
+        else
+            item->setIcon(QPixmap(":/images/images/icon.png"));
+        for(int i=0;i<ui->tvCommandsList->rowCount();++i)
+            if(i!=row && ui->tvCommandsList->item(i,0)!=0 )
+                delete ui->tvCommandsList->item(i,0);
+    }
 }

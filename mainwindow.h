@@ -31,8 +31,13 @@ private slots:
     void readSettings();
     void quitFromApp();
     void readIpList();
-
+    void readCommandsList();
     void on_cbFind_currentTextChanged(const QString &arg1);
+    void setMainMenuActions();
+
+    void on_bpDoIt_customContextMenuRequested(const QPoint &pos);
+
+    void on_bpDoIt_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -45,6 +50,9 @@ private:
     QSettings *settingsApp;
     SetSettings *SetSettingsDialog;
     QStringList *ipList;
+    QStringList *Commands[3];
+    QString DefaultCommand[3];
+    QMenu *commandMainMenu;
 
 protected slots:
     void closeEvent(QCloseEvent *event);

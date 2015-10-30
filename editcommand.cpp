@@ -1,3 +1,4 @@
+#include <QFileDialog>
 #include "editcommand.h"
 #include "ui_editcommand.h"
 
@@ -36,4 +37,24 @@ void editCommand::receiveCommandSettings(QString sNameCmd,QString sFileNameExec,
 void editCommand::on_buBoxOkCancel_rejected()
 {
     this->reject();
+}
+
+void editCommand::showEvent(QShowEvent * event)
+{
+    ui->leNameCmd->setFocus();
+}
+
+void editCommand::on_tbFileNameExec_clicked()
+{
+#ifdef Q_OS_WIN32
+    ui->leFileNameExec->setText(
+                QFileDialog::getOpenFileName(this,
+                                              tr("Выбрать исполняемый файл:"),".",
+                                              tr("Исполняемый файл *.exe (*.exe)")));
+#else
+    ui->leFileNameExec->setText(
+                QFileDialog::getOpenFileName(this,
+                                              tr("Выбрать исполняемый файл:"),".",
+                                              tr("Исполняемый файл *.* (*.*)")));
+#endif
 }
