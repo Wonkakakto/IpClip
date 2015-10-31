@@ -34,10 +34,9 @@ private slots:
     void readCommandsList();
     void on_cbFind_currentTextChanged(const QString &arg1);
     void setMainMenuActions();
-
     void on_bpDoIt_customContextMenuRequested(const QPoint &pos);
-
     void on_bpDoIt_clicked();
+    void on_bpDoIt_Menu_clicked(QAction *event);
 
 private:
     Ui::MainWindow *ui;

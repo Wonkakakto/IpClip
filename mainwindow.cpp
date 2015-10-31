@@ -39,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this -> setMainMenuActions();
 
-    ui->bpDoIt->setMenu(trayIconMenu);
 }
 
 MainWindow::~MainWindow()
@@ -259,17 +258,28 @@ void MainWindow::setMainMenuActions()
     ui->bpDoIt->setText( DefaultCommand[0] );
 
     commandMainMenu = new QMenu(this);
+
+    int size = Commands[0]->count();
+    for(int i=0;i<size;++i)
+    {
+        commandMainMenu->addAction(Commands[0]->at(i));
+    }
+
 }
 
 void MainWindow::on_bpDoIt_customContextMenuRequested(const QPoint &pos)
 {
-    //trayIconMenu->exec();
-    //commandMainMenu->exec();
-    //trayIconMenu->exec();
-
+    QAction* selectedItem = commandMainMenu->exec(QCursor::pos());
+    if(selectedItem)
+        on_bpDoIt_Menu_clicked(selectedItem);
 }
 
 void MainWindow::on_bpDoIt_clicked()
 {
-    QMessageBox::information(this, "TrayIcon", "Сохраняем и применяем новые настройки приложения!");
+    QMessageBox::information(this, "TrayIcon", DefaultCommand[0]);
+}
+
+void MainWindow::on_bpDoIt_Menu_clicked(QAction *event)
+{
+    QMessageBox::information(this, "TrayIcon", event->text());
 }
