@@ -28,7 +28,7 @@ private slots:
     void on_pbClose_clicked();
     void showWindowSetSettings();
     void writeSettings();
-    void readSettings();
+    void readMainWindowPositionAndSize();
     void quitFromApp();
     void readIpList();
     void readCommandsList();
@@ -49,7 +49,9 @@ private:
     QSettings *settingsApp;
     SetSettings *SetSettingsDialog;
     QStringList *ipList;
-    QStringList *Commands[3];
+    QStringList *CommandsName;
+    QStringList *CommandsPath;
+    QStringList *CommandsParam;
     QString DefaultCommand[3];
     QMenu *commandMainMenu;
 

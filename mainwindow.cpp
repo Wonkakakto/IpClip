@@ -30,13 +30,17 @@ MainWindow::MainWindow(QWidget *parent) :
     this->settingsApp = new QSettings( pathForStoreSettings +
                                  QCoreApplication::applicationName() + ".ini",
                                  QSettings::IniFormat);
-    readSettings();
+    readMainWindowPositionAndSize();
 
     ipList = new QStringList;
     this -> readIpList();
 
+    CommandsName = new QStringList;
+    CommandsPath = new QStringList;
+    CommandsParam = new QStringList;
     this -> readCommandsList();
 
+    commandMainMenu = new QMenu(this);
     this -> setMainMenuActions();
 
 }
@@ -45,10 +49,10 @@ MainWindow::~MainWindow()
 {
     delete ipList;
     //delete DefaultCommand;
-    //delete Commands[0];
-    //delete Commands[1];
-    //delete Commands[2];
-    delete this->settingsApp;
+    delete CommandsName;
+    delete CommandsPath;
+    delete CommandsParam;
+    delete commandMainMenu;
     delete ui;
 }
 
@@ -158,14 +162,13 @@ void MainWindow::showWindowSetSettings()
     connect(this, SIGNAL(sendAppSettings(QSettings*)), SetSettingsDialog, SLOT(recieveAppSettings(QSettings*)));
 
     emit sendAppSettings(this->settingsApp);
-    SetSettingsDialog->exec();
-    /*if (SetSettingsDialog->exec() == QDialog::Accepted)
-    {
-      //исправить: здесь нужно перечитать новые настройки
-    }*/
-    //SetSettingsDialog->show();
 
-        //QMessageBox::information(this, "TrayIcon", "Сохраняем и применяем новые настройки приложения!");
+    if (SetSettingsDialog->exec() == QDialog::Accepted)
+    {
+        this -> readIpList();
+        this -> readCommandsList();
+        this -> setMainMenuActions();
+    }
     delete SetSettingsDialog;
 
 }
@@ -178,7 +181,7 @@ void MainWindow::writeSettings()
     settingsApp->endGroup();
 }
 
-void MainWindow::readSettings()
+void MainWindow::readMainWindowPositionAndSize()
 {
     settingsApp->beginGroup("MainWindow");
     if(settingsApp->value("SavePosition",true).toBool())
@@ -233,17 +236,16 @@ void MainWindow::readCommandsList()
     DefaultCommand[1] = "ping";
     DefaultCommand[2] = "%s";
 
-
     int size = settingsApp->beginReadArray("Commands");
-    Commands[0] = new QStringList[size];
-    Commands[1] = new QStringList[size];
-    Commands[2] = new QStringList[size];
+    CommandsName->clear();
+    CommandsPath->clear();
+    CommandsParam->clear();
     for(int j=0;j<size;++j)
     {
         settingsApp->setArrayIndex(j);
-        Commands[0]->append(settingsApp->value("CommandName").toString());
-        Commands[1]->append(settingsApp->value("CommandPath").toString());
-        Commands[2]->append(settingsApp->value("CommandParams").toString());
+        CommandsName->append(settingsApp->value("CommandName").toString());
+        CommandsPath->append(settingsApp->value("CommandPath").toString());
+        CommandsParam->append(settingsApp->value("CommandParams").toString());
         if(DefaultCommand[0]==settingsApp->value("CommandName").toString())
         {
             DefaultCommand[1] = settingsApp->value("CommandPath").toString();
@@ -257,12 +259,12 @@ void MainWindow::setMainMenuActions()
 {
     ui->bpDoIt->setText( DefaultCommand[0] );
 
-    commandMainMenu = new QMenu(this);
+    commandMainMenu->clear();
 
-    int size = Commands[0]->count();
+    int size = CommandsName->count();
     for(int i=0;i<size;++i)
     {
-        commandMainMenu->addAction(Commands[0]->at(i));
+        commandMainMenu->addAction(CommandsName->at(i));
     }
 
 }
