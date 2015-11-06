@@ -35,6 +35,10 @@ private slots:
 
     void on_bpDefaultCommand_clicked();
 
+    void on_pbUpCommand_clicked();
+
+    void on_pbDownCommand_clicked();
+
 public slots:
     void recieveAppSettings(QSettings *sp);
     void receiveCommandParam(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand);

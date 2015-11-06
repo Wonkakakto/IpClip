@@ -36,7 +36,7 @@ private slots:
     void setMainMenuActions();
     void on_bpDoIt_customContextMenuRequested(const QPoint &pos);
     void on_bpDoIt_clicked();
-    void on_bpDoIt_Menu_clicked(QAction *event);
+    //void on_bpDoIt_Menu_clicked(QAction *event);
 
 private:
     Ui::MainWindow *ui;

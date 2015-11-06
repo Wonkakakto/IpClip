@@ -13,10 +13,22 @@ SetSettings::SetSettings(QWidget *parent) :
             editCommandWindow, SLOT(receiveCommandSettings(QString,QString,QString,bool)));
 
     ui->tvCommandsList->setColumnCount(4);
-    ui->tvCommandsList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tvCommandsList->setHorizontalHeaderItem(0,new QTableWidgetItem(""));
+    ui->tvCommandsList->setHorizontalHeaderItem(1,new QTableWidgetItem("Команда"));
+    ui->tvCommandsList->setHorizontalHeaderItem(2,new QTableWidgetItem("Имя исполняемого файла"));
+    ui->tvCommandsList->setHorizontalHeaderItem(3,new QTableWidgetItem("Параметры"));
     ui->tvCommandsList->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    ui->tvCommandsList->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+    ui->tvCommandsList->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);//Fixed
+    //ui->tvCommandsList->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
+    ui->tvCommandsList->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Interactive);
+    //ui->tvCommandsList->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Interactive);
+
+
+    ui->tvCommandsList->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tvCommandsList->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+
+
 
 #ifdef Q_OS_WIN32
    ui->cbAutostart->setEnabled(true);
@@ -124,6 +136,7 @@ void SetSettings::readSettings()
             ui->tvCommandsList->setItem(j,0,new QTableWidgetItem(QPixmap(":/images/images/icon.png"),""));
     }
     settingsApp->endArray();
+
 }
 
 void SetSettings::recieveAppSettings(QSettings *sp)
@@ -194,5 +207,61 @@ void SetSettings::on_bpDefaultCommand_clicked()
         for(int i=0;i<ui->tvCommandsList->rowCount();++i)
             if(i!=row && ui->tvCommandsList->item(i,0)!=0 )
                 delete ui->tvCommandsList->item(i,0);
+    }
+}
+
+void SetSettings::on_pbUpCommand_clicked()
+{
+    int rowcount = ui->tvCommandsList->rowCount();
+    int row = ui->tvCommandsList->currentRow();
+    //if( row == -1 || row == 0 || rowcount < 2)
+    if( row > 0 && rowcount > 1)
+    {
+        QTableWidgetItem* item;
+        if( ui->tvCommandsList->item(row,0) != 0 || ui->tvCommandsList->item(row-1,0) != 0 )
+            if( ui->tvCommandsList->item(row,0) != 0 )
+            {
+                ui->tvCommandsList->setItem(row-1,0,ui->tvCommandsList->takeItem(row,0));
+                delete ui->tvCommandsList->item(row,0);
+            }else
+            {
+                ui->tvCommandsList->setItem(row,0,item = ui->tvCommandsList->takeItem(row-1,0));
+                delete ui->tvCommandsList->item(row-1,0);
+            }
+        for(int i=1;i<4;++i)
+        {
+            item = ui->tvCommandsList->takeItem(row,i);
+            ui->tvCommandsList->setItem(row,i,ui->tvCommandsList->takeItem(row-1,i));
+            ui->tvCommandsList->setItem(row-1,i,item);
+        }
+        ui->tvCommandsList->selectRow(row-1);
+    }
+}
+
+void SetSettings::on_pbDownCommand_clicked()
+{
+    int rowcount = ui->tvCommandsList->rowCount();
+    int row = ui->tvCommandsList->currentRow();
+    // row != -1 and row != rowcount - 1 and rowcount > 1
+    if( row != -1 && rowcount > 1 && row != rowcount - 1)
+    {
+        QTableWidgetItem* item;
+        if( ui->tvCommandsList->item(row,0) != 0 || ui->tvCommandsList->item(row+1,0) != 0 )
+            if( ui->tvCommandsList->item(row,0) != 0 )
+            {
+                ui->tvCommandsList->setItem(row+1,0,ui->tvCommandsList->takeItem(row,0));
+                delete ui->tvCommandsList->item(row,0);
+            }else
+            {
+                ui->tvCommandsList->setItem(row,0,item = ui->tvCommandsList->takeItem(row+1,0));
+                delete ui->tvCommandsList->item(row+1,0);
+            }
+        for(int i=1;i<4;++i)
+        {
+            item = ui->tvCommandsList->takeItem(row,i);
+            ui->tvCommandsList->setItem(row,i,ui->tvCommandsList->takeItem(row+1,i));
+            ui->tvCommandsList->setItem(row+1,i,item);
+        }
+        ui->tvCommandsList->selectRow(row+1);
     }
 }

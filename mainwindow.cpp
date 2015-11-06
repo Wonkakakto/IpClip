@@ -270,8 +270,10 @@ void MainWindow::setMainMenuActions()
 void MainWindow::on_bpDoIt_customContextMenuRequested(const QPoint &pos)
 {
     QAction* selectedItem = commandMainMenu->exec(QCursor::pos());
-    if(selectedItem)
-        on_bpDoIt_Menu_clicked(selectedItem);
+        if(selectedItem)
+            QMessageBox::information(this, "TrayIcon", selectedItem->text());
+   // if(selectedItem)
+     //   on_bpDoIt_Menu_clicked(selectedItem);
 }
 
 void MainWindow::on_bpDoIt_clicked()
@@ -279,7 +281,7 @@ void MainWindow::on_bpDoIt_clicked()
     QMessageBox::information(this, "TrayIcon", DefaultCommand[0]);
 }
 
-void MainWindow::on_bpDoIt_Menu_clicked(QAction *event)
+/*void MainWindow::on_bpDoIt_Menu_clicked(QAction *event)
 {
     QMessageBox::information(this, "TrayIcon", event->text());
-}
+}*/
