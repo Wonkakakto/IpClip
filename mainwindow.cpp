@@ -1,17 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QMenu>
-#include <QMessageBox>
-#include <QCloseEvent>
-#include <QDir>
-#include <QStandardPaths>
-#include <QTextStream>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     this -> setTrayIconActions();
     this -> showTrayIcon();
 
@@ -21,8 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
        | Qt::CustomizeWindowHint
        | Qt::WindowCloseButtonHint);
 
-
-    QString pathForStoreSettings = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)) + QDir::separator();
+    QString pathForStoreSettings =
+            QDir::toNativeSeparators(
+                QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) ) +
+            QDir::separator();
 
     QDir dir = QDir::root();
     dir.mkpath( pathForStoreSettings );
@@ -32,90 +30,89 @@ MainWindow::MainWindow(QWidget *parent) :
                                  QSettings::IniFormat);
     readMainWindowPositionAndSize();
 
-    ipList = new QStringList;
+    //ipList = new QStringList;
     this -> readIpList();
 
-    CommandsName = new QStringList;
-    CommandsPath = new QStringList;
-    CommandsParam = new QStringList;
     this -> readCommandsList();
 
-    commandMainMenu = new QMenu(this);
-    this -> setMainMenuActions();
+    name2bufferAction.setText( tr("Имя в буфер") );
+    connect( &name2bufferAction, SIGNAL( triggered() ), this, SLOT( copyName2Buffer() ) );
+    ip2bufMenu.addAction( &name2bufferAction );
 
+    closeAppAction.setText( tr("Выход из приложения") );
+    connect( &closeAppAction, SIGNAL( triggered() ), this, SLOT( quitFromApp() ) );
+    closeButtonMenu.addAction( &closeAppAction );
 }
 
 MainWindow::~MainWindow()
 {
-    delete ipList;
-    //delete DefaultCommand;
-    delete CommandsName;
-    delete CommandsPath;
-    delete CommandsParam;
-    delete commandMainMenu;
+    delete settingsApp;
     delete ui;
 }
 
 void MainWindow::showTrayIcon()
 {
     // Создаём экземпляр класса и задаём его свойства...
-    trayIcon = new QSystemTrayIcon(this);
-    QIcon trayImage(":/images/images/icon.png");
-    trayIcon -> setIcon(trayImage);
-    trayIcon -> setContextMenu(trayIconMenu);
-
-    // Подключаем обработчик клика по иконке...
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
-
-    // Выводим значок...
-    trayIcon -> show();
-}
-
-void MainWindow::trayActionExecute()
-{
-    if (this->isHidden())
-    {
-        showNormal();
-    }
-    else
-    {
-        this->setHidden(true);
-    }
-}
-
-void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
-{
-    switch (reason)
-    {
-        case QSystemTrayIcon::Trigger:
-        case QSystemTrayIcon::DoubleClick:
-            this -> trayActionExecute();
-            break;
-        default:
-            break;
-    }
+    //QIcon trayImage(":/images/images/icon.ico");
+    //trayIcon.setIcon(trayImage);
+    trayIcon.setIcon( QIcon(":/images/images/icon.ico").pixmap(16,16)  );
+    trayIcon.setContextMenu( &trayIconMenu );
+    trayIcon.show();
 }
 
 void MainWindow::setTrayIconActions()
 {
     // Setting actions...
-    minimizeAction = new QAction("Свернуть", this);
-    restoreAction = new QAction("Восстановить", this);
-    quitAction = new QAction("Выход", this);
-    showWindowSetSettingsAction = new QAction("Настройки", this);
+    minimizeAction.setText( tr("Свернуть") );
+    restoreAction.setText( tr("Восстановить") );
+    showWindowSetSettingsAction.setText( tr("Настройки") );
+    makeUpdate.setText( tr("Обновить") );
+    quitAction.setText( tr("Выход") );
 
     // Connecting actions to slots...
-    connect (minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
-    connect (restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
-    connect (quitAction, SIGNAL(triggered()), this, SLOT(quitFromApp()));
-    connect (showWindowSetSettingsAction, SIGNAL(triggered()), this, SLOT(showWindowSetSettings()));
+    connect ( &minimizeAction, SIGNAL( triggered() ), this, SLOT( hide() ) );
+    connect ( &restoreAction, SIGNAL( triggered() ), this, SLOT( restoreWindow() ) );
+    connect ( &showWindowSetSettingsAction, SIGNAL( triggered() ), this, SLOT( showWindowSetSettings() ) );
+    connect ( &makeUpdate, SIGNAL( triggered() ), this, SLOT( readIpList() ) );
+    connect ( &quitAction, SIGNAL( triggered() ), this, SLOT( quitFromApp() ) );
 
     // Setting system tray's icon menu...
-    trayIconMenu = new QMenu(this);
-    trayIconMenu -> addAction (minimizeAction);
-    trayIconMenu -> addAction (restoreAction);
-    trayIconMenu -> addAction (showWindowSetSettingsAction);
-    trayIconMenu -> addAction (quitAction);
+    trayIconMenu.addAction ( &minimizeAction );
+    trayIconMenu.addAction ( &restoreAction );
+    trayIconMenu.addAction ( &showWindowSetSettingsAction );
+    trayIconMenu.addAction ( &makeUpdate );
+    trayIconMenu.addAction ( &quitAction );
+
+    connect( &trayIconMenu, SIGNAL( aboutToShow() ), this, SLOT( onShowTrayMenu() ) );
+
+    connect( &trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,
+             SLOT(onTrayIconActivate(QSystemTrayIcon::ActivationReason) ) );
+}
+
+void MainWindow::onShowTrayMenu()
+{
+    this->minimizeAction.setEnabled( !this->isHidden() );
+    this->restoreAction.setEnabled( !this->isActiveWindow() );
+}
+
+void MainWindow::onTrayIconActivate(QSystemTrayIcon::ActivationReason r)
+{
+    if( ( r == QSystemTrayIcon::DoubleClick ) ||
+            ( r == QSystemTrayIcon::Trigger ) ||
+            ( r ==  QSystemTrayIcon::MiddleClick ) )
+        restoreWindow();
+}
+
+void MainWindow::restoreWindow()
+{
+    if( this->isHidden() )
+    {
+        this->showNormal();
+    }
+    if( !this->isActiveWindow() )
+    {
+        this->activateWindow();
+    }
 }
 
 void MainWindow::quitFromApp()
@@ -124,7 +121,7 @@ void MainWindow::quitFromApp()
     qApp->quit();
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::closeEvent(QCloseEvent * event)
 {
     event->ignore();
     this -> hide();
@@ -134,20 +131,6 @@ void MainWindow::showEvent(QShowEvent * event)
 {
     ui->cbFind->setFocus();
 }
-
-//Сворачиваем в трей, вместо панели задач:
-/*void MainWindow::changeEvent(QEvent *event)
-{
-        QMainWindow::changeEvent(event);
-    if (event -> type() == QEvent::WindowStateChange)
-    {
-        if (isMinimized())
-        {
-            this -> hide();
-        }
-    }
-
-}*/
 
 void MainWindow::on_pbClose_clicked()
 {
@@ -167,18 +150,19 @@ void MainWindow::showWindowSetSettings()
     {
         this -> readIpList();
         this -> readCommandsList();
-        this -> setMainMenuActions();
     }
-    delete SetSettingsDialog;
 
+    delete SetSettingsDialog;
 }
 
 void MainWindow::writeSettings()
 {
-    settingsApp->beginGroup("MainWindow");
-    settingsApp->setValue("Size", size());
-    settingsApp->setValue("Pos", pos());
-    settingsApp->endGroup();
+
+    this->settingsApp->beginGroup("MainWindow");
+    this->settingsApp->setValue("Size", size());
+    this->settingsApp->setValue("Pos", pos());
+    this->settingsApp->endGroup();
+    settingsApp->sync();
 }
 
 void MainWindow::readMainWindowPositionAndSize()
@@ -195,17 +179,26 @@ void MainWindow::readMainWindowPositionAndSize()
 void MainWindow::readIpList()
 {
     QFile inFile;
-    ipList->clear();
+    QTextStream inTextStream;
+    QString sTmp;
+    int iSharp;
+
+    ipList.clear();
     int size = settingsApp->beginReadArray("Files");
-    for(int i=0;i<size;i++)
+    for( int i = 0; i < size; i++ )
     {
         settingsApp->setArrayIndex(i);
         inFile.setFileName(settingsApp->value("File").toString());
         if (inFile.open(QIODevice::ReadOnly))
         {
-            while(!inFile.atEnd())
+            inTextStream.setDevice(&inFile);
+            while(!inTextStream.atEnd())
             {
-                ipList->append(inFile.readLine());
+                sTmp = inTextStream.readLine();
+                iSharp = sTmp.indexOf("#");
+
+                ipList.append( sTmp.left( iSharp ).trimmed() + " [" +
+                               sTmp.right( sTmp.length() - iSharp - 1 ).trimmed() + "]" );
             }
         }
         inFile.close();
@@ -218,12 +211,12 @@ void MainWindow::on_cbFind_currentTextChanged(const QString &arg1)
     ui->cbResult->clear();
     if ( arg1.count() > 2 )
     {
-        int i = ipList->indexOf(QRegExp(".*" + QRegExp::escape(arg1) + ".*"));
-        while(i!=-1)
+        int i = ipList.indexOf(QRegExp(".*" + QRegExp::escape(arg1) + ".*",Qt::CaseInsensitive));
+        while( i != -1)
         {
-            ui->cbResult->addItem(ipList->at(i));
+            ui->cbResult->addItem(ipList.at(i));
             i++;
-            i = ipList->indexOf(QRegExp(".*" + QRegExp::escape(arg1) + ".*"),i);
+            i = ipList.indexOf(QRegExp(".*" + QRegExp::escape(arg1) + ".*",Qt::CaseInsensitive),i);
         }
     }
 }
@@ -231,59 +224,114 @@ void MainWindow::on_cbFind_currentTextChanged(const QString &arg1)
 void MainWindow::readCommandsList()
 {
     settingsApp->beginGroup("MainWindow");
-    DefaultCommand[0] = settingsApp->value("DefaultCommand","Ping").toString();
+    defaultCommand[0] = settingsApp->value("DefaultCommand","Ping").toString();
     settingsApp->endGroup();
-    DefaultCommand[1] = "ping";
-    DefaultCommand[2] = "%s";
+    defaultCommand[1] = "ping %s";
 
     int size = settingsApp->beginReadArray("Commands");
-    CommandsName->clear();
-    CommandsPath->clear();
-    CommandsParam->clear();
-    for(int j=0;j<size;++j)
+    //CommandsName->clear();
+    //CommandsPath->clear();
+    //CommandsParam->clear();
+    commandMainMenu.clear();
+
+    QAction *action;
+    for( int j = 0; j < size; ++j )
     {
         settingsApp->setArrayIndex(j);
-        CommandsName->append(settingsApp->value("CommandName").toString());
+        /*CommandsName->append(settingsApp->value("CommandName").toString());
         CommandsPath->append(settingsApp->value("CommandPath").toString());
         CommandsParam->append(settingsApp->value("CommandParams").toString());
-        if(DefaultCommand[0]==settingsApp->value("CommandName").toString())
+        if(DefaultCommand[0] == settingsApp->value("CommandName").toString())
         {
             DefaultCommand[1] = settingsApp->value("CommandPath").toString();
             DefaultCommand[2] = settingsApp->value("CommandParams").toString();
+        }*/
+
+        if( defaultCommand[0] == settingsApp->value("CommandName").toString())
+        {
+            defaultCommand[1] = settingsApp->value("CommandPath").toString() + " " +
+                    settingsApp->value("CommandParams").toString();
         }
+
+        action = new QAction(settingsApp->value("CommandName").toString());
+        action->setData( QString( settingsApp->value("CommandPath").toString() + " " +
+                                  settingsApp->value("CommandParams").toString() ) );
+        commandMainMenu.addAction(action);
     }
     settingsApp->endArray();
 }
 
-void MainWindow::setMainMenuActions()
-{
-    ui->bpDoIt->setText( DefaultCommand[0] );
-
-    commandMainMenu->clear();
-
-    int size = CommandsName->count();
-    for(int i=0;i<size;++i)
-    {
-        commandMainMenu->addAction(CommandsName->at(i));
-    }
-
-}
-
 void MainWindow::on_bpDoIt_customContextMenuRequested(const QPoint &pos)
 {
-    QAction* selectedItem = commandMainMenu->exec(QCursor::pos());
-        if(selectedItem)
-            QMessageBox::information(this, "TrayIcon", selectedItem->text());
-   // if(selectedItem)
-     //   on_bpDoIt_Menu_clicked(selectedItem);
+    QAction* selectedItem = commandMainMenu.exec(QCursor::pos());
+    if(selectedItem)
+        makeDoIt( selectedItem->data().toString() );
+}
+
+void MainWindow::makeDoIt(QString cmdName)
+{
+    system( cmdName.replace( "%s", getIPfromStr() ).toLocal8Bit() );
 }
 
 void MainWindow::on_bpDoIt_clicked()
 {
-    QMessageBox::information(this, "TrayIcon", DefaultCommand[0]);
+    makeDoIt( defaultCommand[1] );
 }
 
-/*void MainWindow::on_bpDoIt_Menu_clicked(QAction *event)
+QString MainWindow::getIPfromStr()
 {
-    QMessageBox::information(this, "TrayIcon", event->text());
-}*/
+    QString strTmp = ui->cbResult->currentText().trimmed();
+
+    if ( strTmp.length() > 0 )
+    {
+        int iIndexSharp = strTmp.indexOf(QString("#"));
+
+        if( iIndexSharp >= 0 )
+        {
+            strTmp.truncate(iIndexSharp);
+        }
+
+        strTmp = strTmp.trimmed();
+    }else
+    {
+        strTmp = "";
+    }
+    return strTmp;
+}
+
+void MainWindow::on_pbIP2Buf_clicked()
+{
+    QClipboard* clipboard = QApplication::clipboard();
+    clipboard->setText(getIPfromStr());
+}
+
+void MainWindow::copyName2Buffer()
+{
+    QString strTmp = ui->cbResult->currentText().trimmed();
+
+    if ( strTmp.length() > 0 )
+    {
+        QClipboard* clipboard = QApplication::clipboard();
+        int iIndexSharp = strTmp.indexOf(QString("#"));
+
+        if( iIndexSharp == -1 )
+        {
+            strTmp = "";
+        }else
+        {
+            strTmp = strTmp.right( strTmp.length() - iIndexSharp - 1 );
+        }
+
+        clipboard->setText(strTmp.trimmed());
+    }
+}
+
+void MainWindow::on_pbIP2Buf_customContextMenuRequested(const QPoint &pos)
+{
+    ip2bufMenu.exec(QCursor::pos());
+}
+
+void MainWindow::on_pbClose_customContextMenuRequested(const QPoint &pos)
+{
+    closeButtonMenu.exec(QCursor::pos());
+}

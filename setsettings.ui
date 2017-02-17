@@ -14,110 +14,148 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Настройки</string>
+   <string>Настройки ClipIp</string>
   </property>
   <property name="windowIcon">
    <iconset resource="images.qrc">
-    <normaloff>:/images/images/icon.png</normaloff>:/images/images/icon.png</iconset>
+    <normaloff>:/images/images/icon.ico</normaloff>:/images/images/icon.ico</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
+     <item row="2" column="0">
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
         <number>1</number>
        </property>
        <widget class="QWidget" name="tabFileList">
         <attribute name="title">
-         <string>Файлы с IP адресами:</string>
+         <string>Файлы с IP адресами</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0">
-          <layout class="QGridLayout" name="glFileListMainGrid">
-           <item row="0" column="0">
-            <layout class="QHBoxLayout" name="hzlFileListList">
-             <item>
-              <widget class="QListWidget" name="lvFileList">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="0" column="1">
-            <layout class="QVBoxLayout" name="vlFileListAllButtons">
-             <property name="sizeConstraint">
-              <enum>QLayout::SetDefaultConstraint</enum>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0" rowspan="5">
+          <widget class="QListWidget" name="lvFileList">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Перечень загружаемых файлов</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="pbAddFile">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Добавить файл в перечень</string>
+           </property>
+           <property name="text">
+            <string>Добавить</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>90</width>
+             <height>38</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="2" column="1">
+          <widget class="QPushButton" name="pbDeleteFile">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>Удалить выделенный файл</string>
+           </property>
+           <property name="text">
+            <string>Удалить</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QPushButton" name="pbUpFile">
+             <property name="enabled">
+              <bool>false</bool>
              </property>
-             <item>
-              <widget class="QPushButton" name="pbAddFile">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Добавить</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="verticalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>90</width>
-                 <height>38</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pbDeleteFile">
-               <property name="text">
-                <string>Удалить</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="verticalSpacer">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
+             <property name="toolTip">
+              <string>Переместить выделенный файл вверх</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="images.qrc">
+               <normaloff>:/images/images/up.png</normaloff>:/images/images/up.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbDownFile">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Переместить выделенный файл вниз</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="images.qrc">
+               <normaloff>:/images/images/down.png</normaloff>:/images/images/down.png</iconset>
+             </property>
+            </widget>
            </item>
           </layout>
+         </item>
+         <item row="4" column="1">
+          <spacer name="verticalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>136</height>
+            </size>
+           </property>
+          </spacer>
          </item>
         </layout>
        </widget>
        <widget class="QWidget" name="tabCommandsList">
         <attribute name="title">
-         <string>Список команд:</string>
+         <string>Список команд</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_8">
          <item row="0" column="0">
           <layout class="QGridLayout" name="gridLayout_7">
            <item row="0" column="0" rowspan="6">
             <widget class="QTableWidget" name="tvCommandsList">
+             <property name="toolTip">
+              <string>Список команд</string>
+             </property>
              <property name="selectionMode">
               <enum>QAbstractItemView::SingleSelection</enum>
              </property>
@@ -137,6 +175,9 @@
            </item>
            <item row="0" column="1">
             <widget class="QPushButton" name="pbAddCommand">
+             <property name="toolTip">
+              <string>Добавить команду</string>
+             </property>
              <property name="text">
               <string>Добавить</string>
              </property>
@@ -144,6 +185,12 @@
            </item>
            <item row="1" column="1">
             <widget class="QPushButton" name="pbEditCommand">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Редактировать выделенную команду</string>
+             </property>
              <property name="text">
               <string>Изменить</string>
              </property>
@@ -151,6 +198,12 @@
            </item>
            <item row="2" column="1">
             <widget class="QPushButton" name="pbDeleteCommand">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Удалить выделенную команду</string>
+             </property>
              <property name="text">
               <string>Удалить</string>
              </property>
@@ -158,6 +211,12 @@
            </item>
            <item row="3" column="1">
             <widget class="QPushButton" name="bpDefaultCommand">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Использовать выделенную команду по умолчанию</string>
+             </property>
              <property name="text">
               <string>По умолчанию</string>
              </property>
@@ -167,6 +226,12 @@
             <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
               <widget class="QPushButton" name="pbUpCommand">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="toolTip">
+                <string>Переместить выделенную команду вверх</string>
+               </property>
                <property name="text">
                 <string/>
                </property>
@@ -178,6 +243,12 @@
              </item>
              <item>
               <widget class="QPushButton" name="pbDownCommand">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="toolTip">
+                <string>Переместить выделенную команду вниз</string>
+               </property>
                <property name="text">
                 <string/>
                </property>
@@ -208,14 +279,17 @@
        </widget>
        <widget class="QWidget" name="tab">
         <attribute name="title">
-         <string>Разное:</string>
+         <string>Разное</string>
         </attribute>
         <widget class="QCheckBox" name="cbAutostart">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>20</y>
-           <width>291</width>
+           <y>130</y>
+           <width>321</width>
            <height>28</height>
           </rect>
          </property>
@@ -224,26 +298,38 @@
          </property>
         </widget>
         <widget class="QPushButton" name="pbSetDefaults">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="geometry">
           <rect>
-           <x>40</x>
-           <y>240</y>
-           <width>120</width>
+           <x>20</x>
+           <y>180</y>
+           <width>141</width>
            <height>30</height>
           </rect>
+         </property>
+         <property name="toolTip">
+          <string>Сбросить все настройки программы</string>
          </property>
          <property name="text">
           <string>По умолчанию</string>
          </property>
         </widget>
         <widget class="QPushButton" name="pbImportSettings">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="geometry">
           <rect>
-           <x>190</x>
-           <y>240</y>
-           <width>120</width>
+           <x>20</x>
+           <y>230</y>
+           <width>131</width>
            <height>30</height>
           </rect>
+         </property>
+         <property name="toolTip">
+          <string>Импорт настроек из программы ClipIp</string>
          </property>
          <property name="text">
           <string>Импорт</string>
@@ -253,20 +339,26 @@
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>60</y>
+           <y>10</y>
            <width>271</width>
            <height>28</height>
           </rect>
+         </property>
+         <property name="toolTip">
+          <string>Запоминать размер и позицию окна при перезапуске</string>
          </property>
          <property name="text">
           <string>Запоминать позицию окна</string>
          </property>
         </widget>
         <widget class="QCheckBox" name="cbSaveHistory">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>20</x>
-           <y>100</y>
+           <y>50</y>
            <width>281</width>
            <height>28</height>
           </rect>
@@ -276,10 +368,13 @@
          </property>
         </widget>
         <widget class="QSpinBox" name="cbSaveHistoryDepth">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>320</x>
-           <y>100</y>
+           <y>50</y>
            <width>53</width>
            <height>31</height>
           </rect>
@@ -288,20 +383,53 @@
           <number>40</number>
          </property>
         </widget>
+        <widget class="QKeySequenceEdit" name="keySequenceEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>90</y>
+           <width>361</width>
+           <height>30</height>
+          </rect>
+         </property>
+         <property name="keySequence">
+          <string>Ctrl+Shift+A</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>О программе</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QTextBrowser" name="tbAboutText">
+           <property name="openExternalLinks">
+            <bool>true</bool>
+           </property>
+           <property name="openLinks">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-       </property>
-      </widget>
-     </item>
     </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

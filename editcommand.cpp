@@ -1,4 +1,3 @@
-#include <QFileDialog>
 #include "editcommand.h"
 #include "ui_editcommand.h"
 
@@ -21,7 +20,7 @@ editCommand::~editCommand()
 
 void editCommand::on_buBoxOkCancel_accepted()
 {
-    //samle: emit sendCommandSettings("test","test","test",false);
+    //sample: emit sendCommandSettings("test","test","test",false);
     emit sendCommandParam(ui->leNameCmd->text(),ui->leFileNameExec->text(),ui->lePrams->text(),this->bNewCommand);
     this->accept();
 }
@@ -46,15 +45,15 @@ void editCommand::showEvent(QShowEvent * event)
 
 void editCommand::on_tbFileNameExec_clicked()
 {
-#ifdef Q_OS_WIN32
-    ui->leFileNameExec->setText(
+    #ifdef Q_OS_WIN32
+        ui->leFileNameExec->setText(
                 QFileDialog::getOpenFileName(this,
                                               tr("Выбрать исполняемый файл:"),".",
                                               tr("Исполняемый файл *.exe (*.exe)")));
-#else
-    ui->leFileNameExec->setText(
+    #else
+        ui->leFileNameExec->setText(
                 QFileDialog::getOpenFileName(this,
                                               tr("Выбрать исполняемый файл:"),".",
                                               tr("Исполняемый файл *.* (*.*)")));
-#endif
+    #endif
 }

@@ -27,3 +27,21 @@ FORMS    += mainwindow.ui \
 
 RESOURCES += \
     images.qrc
+
+RC_ICONS = images/icon.ico
+
+# The application version
+VERSION = 0.0.0.1
+
+# Define the preprocessor macro to get the application version in our application.
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
+#@VERSION = 0.0.0.1
+QMAKE_TARGET_COMPANY = VioD
+QMAKE_TARGET_PRODUCT = IpClip
+#QMAKE_TARGET_DESCRIPTION = description
+#QMAKE_TARGET_COPYRIGHT = copyright@
+
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
+DISTFILES +=

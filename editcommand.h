@@ -2,8 +2,9 @@
 #define EDITCOMMAND_H
 
 #include <QDialog>
+#include <QFileDialog>
 
-namespace Ui {
+namespace Ui{
 class editCommand;
 }
 
@@ -21,7 +22,6 @@ public slots:
 private slots:
     void on_buBoxOkCancel_accepted();
     void on_buBoxOkCancel_rejected();
-
     void on_tbFileNameExec_clicked();
 
 private:
