@@ -270,7 +270,20 @@ void MainWindow::on_bpDoIt_customContextMenuRequested(const QPoint &pos)
 
 void MainWindow::makeDoIt(QString cmdName)
 {
-    system( cmdName.replace( "%s", getIPfromStr() ).toLocal8Bit() );
+    //system( cmdName.replace( "%s", getIPfromStr() ).toLocal8Bit() );
+
+    //QMessageBox::information(this,"info",cmdName.replace( "%s", getIPfromStr() ));
+    QThread* thread = new QThread;
+    RunExternalCommand* oRun = new RunExternalCommand( cmdName.replace( "%s", getIPfromStr() ) );
+    oRun->moveToThread(thread);
+
+    connect( thread, SIGNAL( started() ), oRun, SLOT( execute() ) );
+
+    connect( oRun, SIGNAL( finished() ), thread, SLOT( quit() ) );
+    connect( oRun, SIGNAL( finished() ), oRun, SLOT( deleteLater() ) );
+    connect( thread, SIGNAL( finished() ), thread, SLOT( deleteLater() ) );
+
+    thread->start();
 }
 
 void MainWindow::on_bpDoIt_clicked()

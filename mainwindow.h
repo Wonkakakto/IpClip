@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "setsettings.h"
+#include "runexternalcommand.h"
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
@@ -16,6 +17,7 @@
 //#include <QProcess>
 //#include <QKeySequence>
 #include <QTextStream>
+#include <QThread>
 
 
 namespace Ui {

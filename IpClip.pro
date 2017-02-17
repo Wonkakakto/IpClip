@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     editcommand.cpp \
-    setsettings.cpp
+    setsettings.cpp \
+    runexternalcommand.cpp
 
 HEADERS  += mainwindow.h \
     setsettings.h \
-    editcommand.h
+    editcommand.h \
+    runexternalcommand.h
 
 FORMS    += mainwindow.ui \
     setsettings.ui \
@@ -31,12 +33,12 @@ RESOURCES += \
 RC_ICONS = images/icon.ico
 
 # The application version
-VERSION = 0.0.0.1
+VERSION = 0.0.0.2
 
 # Define the preprocessor macro to get the application version in our application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-#@VERSION = 0.0.0.1
+#@VERSION = 0.0.0.2
 QMAKE_TARGET_COMPANY = VioD
 QMAKE_TARGET_PRODUCT = IpClip
 #QMAKE_TARGET_DESCRIPTION = description

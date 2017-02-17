@@ -436,7 +436,7 @@ void SetSettings::updateAboutText()
 {
     QString text = "ClipIp<br>"
                  "<br>"
-                 "Версия: " + qApp->applicationVersion() + " - пре-альфа 1<br>"
+                 "Версия: " + qApp->applicationVersion() + " - пре-альфа-2<br>"
                  "<br>"
                  "Программа распространяется под лицензией GNU LGPL version 3<br>"
                  "<a href='http://www.gnu.org/licenses/lgpl-3.0.html' target='_blank'>http://www.gnu.org/licenses/lgpl-3.0.html</a><br>"
