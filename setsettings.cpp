@@ -442,7 +442,7 @@ void SetSettings::updateAboutText()
                  "<a href='http://www.gnu.org/licenses/lgpl-3.0.html' target='_blank'>http://www.gnu.org/licenses/lgpl-3.0.html</a><br>"
                  "<br>"
                  "Исходный код программы доступен по адресу:<br>"
-                 "<a href='https://github.com/' target='_blank'>https://github.com/</a><br>"
+                 "<a href='https://github.com/Wonkakakto/IpClip' target='_blank'>https://github.com/Wonkakakto/IpClip</a><br>"
                  "<br>"
                  "Файл с настройками приложения:<br>" + settingsApp->fileName();
     ui->tbAboutText->clear();
