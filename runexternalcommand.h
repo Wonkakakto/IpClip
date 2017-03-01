@@ -3,18 +3,9 @@
 
 #include <QObject>
 
-/*class RunExternalCommand : public QObject
+class RunExternalCommand : public QObject
 {
-    Q_OBJECT
-public:
-    explicit RunExternalCommand(QObject *parent = 0);
 
-signals:
-
-public slots:
-};*/
-
-class RunExternalCommand : public QObject {
     Q_OBJECT
 
 public:

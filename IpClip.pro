@@ -33,12 +33,12 @@ RESOURCES += \
 RC_ICONS = images/icon.ico
 
 # The application version
-VERSION = 0.0.0.2
+VERSION = 0.0.0.3
 
 # Define the preprocessor macro to get the application version in our application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-#@VERSION = 0.0.0.2
+#@VERSION = 0.0.0.3
 QMAKE_TARGET_COMPANY = VioD
 QMAKE_TARGET_PRODUCT = IpClip
 #QMAKE_TARGET_DESCRIPTION = description

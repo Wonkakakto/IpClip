@@ -26,7 +26,7 @@
      <item row="2" column="0">
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tabFileList">
         <attribute name="title">
@@ -281,22 +281,6 @@
         <attribute name="title">
          <string>Разное</string>
         </attribute>
-        <widget class="QCheckBox" name="cbAutostart">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>130</y>
-           <width>321</width>
-           <height>28</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Автозапуск при загрузке Windows</string>
-         </property>
-        </widget>
         <widget class="QPushButton" name="pbSetDefaults">
          <property name="enabled">
           <bool>true</bool>
@@ -324,7 +308,7 @@
           <rect>
            <x>20</x>
            <y>230</y>
-           <width>131</width>
+           <width>141</width>
            <height>30</height>
           </rect>
          </property>
@@ -397,6 +381,22 @@
          </property>
          <property name="keySequence">
           <string>Ctrl+Shift+A</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pbStartup">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>140</y>
+           <width>141</width>
+           <height>27</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>Добавить приложение в автозапуск</string>
+         </property>
+         <property name="text">
+          <string>Автозагрузка</string>
          </property>
         </widget>
        </widget>

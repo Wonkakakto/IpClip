@@ -20,22 +20,25 @@
 #include <QThread>
 
 
-namespace Ui {
-class MainWindow;
+namespace Ui
+{
+
+    class MainWindow;
+
 }
 
 class MainWindow : public QMainWindow
 {
+
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
 private slots:
     void showWindowSetSettings();
-    void setTrayIconActions();
-    void showTrayIcon();
+    void setTrayIcon();
     void on_pbClose_clicked();
     void writeSettings();
     void readMainWindowPositionAndSize();
@@ -56,7 +59,7 @@ private slots:
     void onTrayIconActivate(QSystemTrayIcon::ActivationReason r);
 
 private:
-    Ui::MainWindow* ui;
+    Ui::MainWindow * ui;
     QMenu trayIconMenu;
     QAction minimizeAction;
     QAction restoreAction;
@@ -75,11 +78,12 @@ private:
     QString defaultCommand[2];
 
 protected slots:
-    void closeEvent(QCloseEvent *event);
-    void showEvent(QShowEvent * event);
+    void closeEvent (QCloseEvent* event);
+    void showEvent (QShowEvent* event);
 
 signals:
-    void sendAppSettings(QSettings *sp);
+    void sendAppSettings (QSettings* sp);
+
 };
 
 #endif // MAINWINDOW_H

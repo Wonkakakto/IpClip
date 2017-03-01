@@ -10,6 +10,11 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QTemporaryFile>
+#include <QStandardPaths>
+
+#ifdef Q_OS_WIN32
+#include <ShlObj.h>
+#endif
 
 namespace Ui {
 class SetSettings;
@@ -20,7 +25,7 @@ class SetSettings : public QDialog
     Q_OBJECT
 
 public:
-    explicit SetSettings(QWidget *parent = 0);
+    explicit SetSettings(QWidget* parent = 0);
     ~SetSettings();
 
 private:
@@ -51,12 +56,15 @@ private slots:
     void updateAboutText();
     void on_pbImportSettings_clicked();
 
+    void on_pbStartup_clicked();
+
 public slots:
-    void recieveAppSettings(QSettings *sp);
-    void receiveCommandParam(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand);
+    void recieveAppSettings(QSettings* sp);
+    void receiveCommandParam(QString sNameCmd, QString sFileNameExec, QString sParams, bool bNewCommand);
 
 signals:
-    void sendCommandSettings(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand);
+    void sendCommandSettings(QString sNameCmd, QString sFileNameExec, QString sParams, bool bNewCommand);
+
 };
 
 #endif // SETSETTINGS_H

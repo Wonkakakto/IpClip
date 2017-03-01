@@ -4,8 +4,11 @@
 #include <QDialog>
 #include <QFileDialog>
 
-namespace Ui{
-class editCommand;
+namespace Ui
+{
+
+    class editCommand;
+
 }
 
 class editCommand : public QDialog
@@ -13,11 +16,11 @@ class editCommand : public QDialog
     Q_OBJECT
 
 public:
-    explicit editCommand(QWidget *parent = 0);
+    explicit editCommand(QWidget* parent = 0);
     ~editCommand();
 
 public slots:
-    void receiveCommandSettings(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCmd);
+    void receiveCommandSettings(QString sNameCmd, QString sFileNameExec, QString sParams, bool bNewCmd);
 
 private slots:
     void on_buBoxOkCancel_accepted();
@@ -25,14 +28,15 @@ private slots:
     void on_tbFileNameExec_clicked();
 
 private:
-    Ui::editCommand *ui;
+    Ui::editCommand* ui;
     bool bNewCommand;
 
 protected slots:
-    void showEvent(QShowEvent * event);
+    void showEvent(QShowEvent* event);
 
 signals:
-    void sendCommandParam(QString sNameCmd,QString sFileNameExec,QString sParams,bool bNewCommand);
+    void sendCommandParam(QString sNameCmd, QString sFileNameExec, QString sParams, bool bNewCommand);
+
 };
 
 #endif // EDITCOMMAND_H
